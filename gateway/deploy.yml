@@ -1,0 +1,122 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fizz-gateway
+  namespace: testing-java
+  labels:
+    app: fizz-gateway
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 50%
+      maxUnavailable: 50%
+  selector:
+    matchLabels:
+      app: fizz-gateway
+  template:
+    metadata:
+      labels:
+        app: fizz-gateway
+    spec:
+      imagePullSecrets:
+        - name: harborsecret
+      terminationGracePeriodSeconds: 90
+      containers:
+      - name: fizz-gateway
+        image: fizzgate/fizz-gateway-community:2.0.0
+        imagePullPolicy: Always
+        command: 
+          - java
+        args: 
+          - "-Xms256m"
+          - "-Xmx4096m"
+          - "-XX:MetaspaceSize=128m"
+          - "-XX:MaxMetaspaceSize=256m"
+          - "-XX:+AggressiveOpts"
+          - "-XX:+UseBiasedLocking"
+          - "-XX:+UseG1GC"
+          - "-XX:+HeapDumpOnOutOfMemoryError"
+          - "-XX:-OmitStackTraceInFastThrow"
+          - "-verbose:gc"
+          - "-XX:+PrintGCDetails"
+          - "-XX:+PrintGCDateStamps"
+          - "-XX:+PrintHeapAtGC"
+          - "-Xloggc:/opt/fizz-gateway-community/logs/.gc"
+          - "-XX:+HeapDumpOnOutOfMemoryError"
+          - "-XX:+ExitOnOutOfMemoryError"
+          - "-XX:HeapDumpPath=/opt/fizz-gateway-community/logs/dump.logs"
+          - "-Dorg.jboss.netty.epollBugWorkaround=true"
+          - "-Dspring.profiles.active=${SPRING_PROFILES_ACTIVE}"
+          - "-Denv=${SPRING_PROFILES_ACTIVE}"
+          - "-Duser.timezone=GMT+8"
+          - "-Djava.security.egd=file:/dev/./urandom"
+          - "-jar"
+          - "/opt/fizz-gateway-community/fizz-gateway-community.jar"
+        ports:
+        - containerPort: 8600
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: testing
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "4096Mi"
+            cpu: "2048m"
+        readinessProbe:
+          tcpSocket:
+            port: 8600
+          initialDelaySeconds: 30
+          timeoutSeconds: 2
+          periodSeconds: 10   
+        volumeMounts:
+            - name: fizz-gateway-config
+              mountPath: "/opt/fizz-gateway-community/application.yml"
+              subPath: application.yml
+      
+      volumes:
+      - name: fizz-gateway-config
+        configMap:
+          name: fizz-gateway-config
+
+
+---  
+apiVersion: v1
+kind: Service
+metadata:
+  name: fizz-gateway
+  namespace: testing-java
+spec:
+  type: NodePort
+  ports:
+  - port: 8600
+    protocol: TCP
+    targetPort: 8600
+  selector:
+    app: fizz-gateway
+
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress 
+metadata:
+  name: fizz-gateway
+  namespace: testing-java
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+
+spec:
+  rules:
+  - host: fizz.turboradio.cn
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: fizz-gateway
+          servicePort: 8600
+
