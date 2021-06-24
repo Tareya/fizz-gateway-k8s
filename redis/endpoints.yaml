@@ -5,7 +5,7 @@ metadata:
   namespace: testing-java
 subsets:
   - addresses:
-      - ip: 192.168.3.36
+      - ip: 192.168.3.193
     ports:
       - port: 6379
 

@@ -70,11 +70,11 @@ spring:
 aggregate:
   redis:
     # need replace
-    host: 192.168.3.36 #please input the redis host (default:localhost)
+    host: 192.168.3.193 #please input the redis host (default:localhost)
     # need replace
     port: 6379 #please input the redis port (default:6379)
     # need replace
-    password: FizzMySQL#123! #please input the redis password (default:123456)
+    password: uniondrug@123 #please input the redis password (default:123456)
     # need replace
     database: 10 #please input the redis database (default:9)
 proxy-webclient:
