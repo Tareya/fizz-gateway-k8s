@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: fizz-redis
+  namespace: testing-java
+subsets:
+  - addresses:
+      - ip: 192.168.3.36
+    ports:
+      - port: 6379
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fizz-redis
+  namespace: testing-java
+spec:
+  ports:
+    - port: 6379
+      targetPort: 6379
+      protocol: TCP
