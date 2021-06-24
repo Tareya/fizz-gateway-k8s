@@ -5,7 +5,7 @@ nacos:
     # if use Nacos discovery set this flag to true
     enabled: true
     # need replace
-    server-addr: nacos.turboradio.cn:80
+    server-addr: nacos.example.com:80
     username: nacos
     password: 0UQwQqyMvk2TSiwR
     # need replace
@@ -36,16 +36,16 @@ spring:
     password: FizzMySQL#123!
   mail:
     # 邮箱host
-    host: mail.uniondrug.com
+    host: mail.example.com
     # 邮箱用户名
-    username: shenlei
+    username: fizz-gateway
     # 邮箱密码
-    password: Kos-Mos4454
+    password: 123456
     # 邮箱port
     port: 25
     properties:
       # 邮箱发送人地址
-      from: shenlei@uniondrug.com
+      from: fizz-gateway@example.com
       mail:
         smtp:
           # 使用鉴权
@@ -59,7 +59,7 @@ spring:
     # redis配置
     database: 10
     host: 192.168.3.193
-    password: uniondrug@123
+    password: 123456
     port: 6379
     ssl: false
   servlet:
@@ -68,11 +68,11 @@ spring:
       location: /opt/fizz-manager-professional/logs
 params:
   # fizz-gateway地址列表，当不使用注册中心时可配置该参数，网关缓存功能会读取该列表显示
-  gateway-urls: http://fizz.turboradio.cn:80
+  gateway-urls: http://fizz.example.com:80
   aggregate:
     test:
       # fizz-gateway地址，聚合接口测试页面使用该地址发送请求
-      gateway-url: http://fizz.turboradio.cn:80  # fizz-manager地址
+      gateway-url: http://fizz.example.com:80  # fizz-manager地址
   fizz-manager-url: http://localhost:8000/
   # 网关日志保存天数，网关保存日志量影响页面查询速度，可根据实际情况调整该参数
   fizz-log-save-days: 2

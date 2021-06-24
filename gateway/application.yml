@@ -19,7 +19,7 @@ nacos:
     # if use Nacos config set this flag to true
     enabled: true #use Nacos Config? (default:false)
     # need replace
-    server-addr: nacos.turboradio.cn:80
+    server-addr: nacos.example.com:80
     username: nacos
     password: 0UQwQqyMvk2TSiwR
     auto-refresh: true
@@ -74,7 +74,7 @@ aggregate:
     # need replace
     port: 6379 #please input the redis port (default:6379)
     # need replace
-    password: uniondrug@123 #please input the redis password (default:123456)
+    password: 123456 #please input the redis password (default:123456)
     # need replace
     database: 10 #please input the redis database (default:9)
 proxy-webclient:
